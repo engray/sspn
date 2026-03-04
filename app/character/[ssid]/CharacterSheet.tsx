@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import styles from "./CharacterSheet.module.css";
 import { updateCharacter } from "@/app/lib/actions";
 import { Dictionary } from "@/app/lib/dictionary/index";
@@ -13,15 +14,42 @@ export default function CharacterSheet({
     dict: Dictionary;
 }) {
     const [character, setCharacter] = useState(initialCharacter);
-    const [isSaving, setIsSaving] = useState(false);
+    const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+    const [isOnline, setIsOnline] = useState(true);
+    const [mounted, setMounted] = useState(false);
+    const isFirstRender = useRef(true);
+
+    // Network status listener
+    useEffect(() => {
+        setMounted(true);
+        setIsOnline(navigator.onLine);
+        const handleOnline = () => setIsOnline(true);
+        const handleOffline = () => setIsOnline(false);
+
+        window.addEventListener("online", handleOnline);
+        window.addEventListener("offline", handleOffline);
+
+        return () => {
+            window.removeEventListener("online", handleOnline);
+            window.removeEventListener("offline", handleOffline);
+        };
+    }, []);
 
     const handleChange = (field: string, value: any) => {
         setCharacter((prev: any) => ({ ...prev, [field]: value }));
+        if (saveStatus === "saved" || saveStatus === "error") {
+            setSaveStatus("idle");
+        }
     };
 
-    const handleSave = async () => {
-        setIsSaving(true);
-        const { id, ssid, createdAt, updatedAt, ...updateData } = character;
+    const performSave = useCallback(async (dataToSave: any) => {
+        if (!navigator.onLine) {
+            setSaveStatus("error");
+            return;
+        }
+
+        setSaveStatus("saving");
+        const { id, ssid, createdAt, updatedAt, ...updateData } = dataToSave;
         const parsedData = {
             ...updateData,
             brawn: Number(updateData.brawn) || 0,
@@ -46,8 +74,31 @@ export default function CharacterSheet({
             copper: Number(updateData.copper) || 0,
         };
 
-        await updateCharacter(character.ssid, parsedData);
-        setIsSaving(false);
+        const result = await updateCharacter(dataToSave.ssid, parsedData);
+        if (result?.error) {
+            setSaveStatus("error");
+        } else {
+            setSaveStatus("saved");
+            setTimeout(() => setSaveStatus("idle"), 3000); // clear toast after 3s
+        }
+    }, []);
+
+    // Autosave Debounce
+    useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+
+        const timer = setTimeout(() => {
+            performSave(character);
+        }, 1500); // Autosave after 1.5 seconds of inactivity
+
+        return () => clearTimeout(timer);
+    }, [character, performSave]);
+
+    const handleManualSave = () => {
+        performSave(character);
     };
 
     return (
@@ -275,8 +326,35 @@ export default function CharacterSheet({
 
             </div>
 
-            <button className={styles.saveButton} onClick={handleSave} disabled={isSaving}>
-                {isSaving ? dict.common.loading : dict.common.save}
+            {/* TOAST NOTIFICATIONS */}
+            {mounted && createPortal(
+                <div className={styles.toastContainer}>
+                    {!isOnline && (
+                        <div className={`${styles.toast} ${styles.toastError}`}>
+                            Brak połączenia! Jesteś offline.
+                        </div>
+                    )}
+                    {isOnline && saveStatus === "saving" && (
+                        <div className={`${styles.toast} ${styles.toastInfo}`}>
+                            {dict.common.loading || "Zapisywanie..."}
+                        </div>
+                    )}
+                    {isOnline && saveStatus === "saved" && (
+                        <div className={`${styles.toast} ${styles.toastSuccess}`}>
+                            {dict.common.saved || "Zapisano!"}
+                        </div>
+                    )}
+                    {isOnline && saveStatus === "error" && (
+                        <div className={`${styles.toast} ${styles.toastError}`}>
+                            {dict.common.error || "Błąd zapisu!"}
+                        </div>
+                    )}
+                </div>,
+                document.body
+            )}
+
+            <button className={styles.saveButton} onClick={handleManualSave} disabled={saveStatus === "saving" || !isOnline}>
+                {saveStatus === "saving" ? dict.common.loading : dict.common.save}
             </button>
         </div>
     );
