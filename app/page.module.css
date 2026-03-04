@@ -1,0 +1,108 @@
+.header {
+    text-align: center;
+    padding: var(--spacing-xl) 0;
+    margin-bottom: var(--spacing-xl);
+}
+
+.title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    background: linear-gradient(135deg, var(--text-main) 0%, var(--accent-primary) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: var(--spacing-sm);
+}
+
+.subtitle {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.cardContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-xl);
+    padding-bottom: var(--spacing-xl);
+}
+
+.card {
+    padding: var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    transition: transform var(--transition-normal), background-color var(--transition-normal);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    background: rgba(34, 38, 47, 0.8);
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-xs);
+}
+
+.card p {
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-md);
+    flex-grow: 1;
+}
+
+.primaryButton {
+    background-color: var(--accent-primary);
+    color: white;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+    width: 100%;
+}
+
+.primaryButton:hover {
+    background-color: var(--accent-primary-hover);
+    transform: scale(1.02);
+}
+
+.inputGroup {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.input {
+    flex-grow: 1;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-size: 1.1rem;
+    text-align: center;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: border-color var(--transition-fast);
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+}
+
+.secondaryButton {
+    background-color: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.secondaryButton:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: var(--text-muted);
+}

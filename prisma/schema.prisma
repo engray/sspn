@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Character {
+  id                  String   @id @default(uuid())
+  ssid                String   @unique
+  name                String   @default("Nowy Bohater")
+  species             String   @default("Człowiek")
+  career              String   @default("")
+  
+  // Attributes
+  brawn               Int      @default(2)
+  agility             Int      @default(2)
+  intellect           Int      @default(2)
+  cunning             Int      @default(2)
+  willpower           Int      @default(2)
+  presence            Int      @default(2)
+  
+  // Derived Stats
+  soak                Int      @default(2)
+  woundsThreshold     Int      @default(10)
+  woundsCurrent       Int      @default(0)
+  strainThreshold     Int      @default(10)
+  strainCurrent       Int      @default(0)
+  defenseMelee        Int      @default(0)
+  defenseRanged       Int      @default(0)
+  
+  // JSON fields for flexible lists (Skills, Talents, Weapons, Gear)
+  skills              String   @default("[]")
+  talents             String   @default("[]")
+  weapons             String   @default("[]")
+  gear                String   @default("[]")
+  
+  // Experience
+  experienceTotal     Int      @default(0)
+  experienceAvailable Int      @default(0)
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}

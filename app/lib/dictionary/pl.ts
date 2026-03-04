@@ -1,0 +1,48 @@
+export const pl = {
+    common: {
+        loading: "Wczytywanie...",
+        save: "Zapisz",
+        saved: "Zapisano",
+        error: "Wystąpił błąd",
+        back: "Powrót",
+        createCharacter: "Nowa Karta Postaci",
+        loadCharacter: "Wczytaj Postać",
+        ssidPlaceholder: "np. X8K2M9",
+        ssidLabel: "Twój kod dostępu",
+    },
+    character: {
+        name: "Imię",
+        species: "Rasa",
+        career: "Profesja",
+        attributes: "Atrybuty",
+        derivedStats: "Statystyki Pochodne",
+        skills: "Umiejętności",
+        talents: "Talenty",
+        weapons: "Broń",
+        gear: "Ekwipunek",
+        experience: "Doświadczenie",
+    },
+    attributes: {
+        brawn: "Ciało",
+        agility: "Zręczność",
+        intellect: "Intelekt",
+        cunning: "Spryt",
+        willpower: "Siła Woli",
+        presence: "Ogłada",
+    },
+    derived: {
+        soak: "Wyparowania",
+        wounds: "Rany",
+        woundsThreshold: "Próg Ran",
+        woundsCurrent: "Aktualne",
+        strain: "Zmęczenie",
+        strainThreshold: "Próg Zmęczenia",
+        strainCurrent: "Aktualne",
+        defenseMelee: "Obrona (WRC)",
+        defenseRanged: "Obrona (DYS)",
+    },
+    experience: {
+        total: "Suma PD",
+        available: "Dostępne PD",
+    }
+};
