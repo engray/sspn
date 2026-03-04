@@ -13,11 +13,28 @@ datasource db {
 model Character {
   id                  String   @id @default(uuid())
   ssid                String   @unique
+  
+  // Charakterystyka
   name                String   @default("Nowy Bohater")
   species             String   @default("Człowiek")
-  career              String   @default("")
+  age                 String   @default("")
+  gender              String   @default("")
+  height              String   @default("")
+  hair                String   @default("")
+  eyes                String   @default("")
+  distinguishingMarks String   @default("")
+  socialClass         String   @default("")
   
-  // Attributes
+  // Postać
+  profession          String   @default("")
+  career              String   @default("")
+  specialization      String   @default("")
+  virtue              String   @default("")
+  flaw                String   @default("")
+  desire              String   @default("")
+  fear                String   @default("")
+  
+  // Attributes (Cechy)
   brawn               Int      @default(2)
   agility             Int      @default(2)
   intellect           Int      @default(2)
@@ -25,24 +42,31 @@ model Character {
   willpower           Int      @default(2)
   presence            Int      @default(2)
   
-  // Derived Stats
+  // Derived Stats (Atrybuty)
   soak                Int      @default(2)
   woundsThreshold     Int      @default(10)
   woundsCurrent       Int      @default(0)
   strainThreshold     Int      @default(10)
   strainCurrent       Int      @default(0)
+  corruptionThreshold Int      @default(0)
+  corruptionCurrent   Int      @default(0)
   defenseMelee        Int      @default(0)
   defenseRanged       Int      @default(0)
   
-  // JSON fields for flexible lists (Skills, Talents, Weapons, Gear)
+  // JSON fields for flexible lists (Skills, Talents, Weapons, Gear, Mutations, Injuries)
   skills              String   @default("[]")
   talents             String   @default("[]")
   weapons             String   @default("[]")
   gear                String   @default("[]")
+  criticalInjuries    String   @default("[]") // Urazy Krytyczne
+  mutations           String   @default("[]") // Mutacje
   
-  // Experience
+  // Experience / Wealth
   experienceTotal     Int      @default(0)
   experienceAvailable Int      @default(0)
+  gold                Int      @default(0) // Złote Korony
+  silver              Int      @default(0) // Srebrne Szylingi
+  copper              Int      @default(0) // Miedziane Pensy
   
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
